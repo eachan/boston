@@ -1,0 +1,16 @@
+[Unit]
+Description=Boston Dashboard Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/boston
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/home/pi/boston/.venv/bin/python -m boston.run_dashboard
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

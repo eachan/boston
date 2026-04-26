@@ -1,0 +1,11 @@
+[Unit]
+Description=Boston audio output volume initialization
+After=sound.target multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -lc 'amixer -q sset Master 100%% unmute || true; amixer -q sset PCM 100%% unmute || true; amixer -q sset Speaker 100%% unmute || true; amixer -q sset Headphone 100%% unmute || true; if command -v pactl >/dev/null 2>&1; then pactl set-sink-volume @DEFAULT_SINK@ 100%% || true; fi; if command -v wpctl >/dev/null 2>&1; then wpctl set-volume @DEFAULT_AUDIO_SINK@ 1.0 || true; fi'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

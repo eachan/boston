@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h2>Kumite Match History</h2>
+  {% if not matches %}
+  <p>No matches recorded yet.</p>
+  {% endif %}
+
+  {% for match in matches %}
+  <article class="subcard">
+    <div class="subcard-header">
+      <h3>Match #{{ match.id }}</h3>
+      <div class="inline">
+        <span>Winner:</span>
+        <strong>{{ match.winner or 'unknown' }}</strong>
+      </div>
+    </div>
+    <ul class="kv">
+      <li><span>Started</span><strong>{{ match.started_at }}</strong></li>
+      <li><span>Ended</span><strong>{{ match.ended_at or '-' }}</strong></li>
+      <li><span>Timed</span><strong>{{ match.timed }}</strong></li>
+      <li><span>Duration</span><strong>{{ match.duration_seconds if match.duration_seconds is not none else 'untimed' }}</strong></li>
+      <li><span>Score</span><strong>White {{ match.white_score }} - Blue {{ match.blue_score }}</strong></li>
+    </ul>
+
+    <h4>Timeline</h4>
+    <ul class="timeline">
+      {% for event in match.events %}
+      <li>
+        <span class="dot"></span>
+        <div>
+          <small>{{ event.timestamp }}</small>
+          <div><strong>{{ event.event_type }}</strong> {{ event.detail or '' }}</div>
+          {% if event.actor %}<div>Actor: {{ event.actor }}</div>{% endif %}
+          {% if event.points %}<div>Points: {{ event.points }}</div>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </article>
+  {% endfor %}
+</section>
+{% endblock %}

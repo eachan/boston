@@ -1,0 +1,100 @@
+app_name: Boston
+data_dir: data
+database_path: data/boston.db
+log_path: data/boston.log
+
+audio:
+  sample_rate: 16000
+  channels: 1
+  blocksize: 4000
+  vosk_model_path: models/vosk
+  wake_word: "hey boston"
+  special_move_sound_path: "hadouken.mp3"
+  input_gain: 1.6
+  use_command_grammar: true
+  partial_min_words: 2
+  command_phrases:
+    - "hey boston"
+    - "okay boston"
+    - "status"
+    - "what is your ip address"
+    - "what s your ip address"
+    - "ip address"
+    - "camera check"
+    - "can you see us"
+    - "can you see the fighters"
+    - "ready"
+    - "start new match"
+    - "begin new match"
+    - "start match"
+    - "begin match"
+    - "stop the match"
+    - "restart"
+    - "set timer"
+    - "no timer"
+    - "self test"
+    - "special move"
+    - "hadouken"
+    - "one minute"
+    - "two minutes"
+    - "three minutes"
+    - "one and a half minutes"
+    - "ninety seconds"
+    - "white"
+    - "blue"
+
+tts:
+  enabled: true
+  backend: "auto"
+  rate: 155
+  volume: 1.0
+  preferred_voice_tokens:
+    - "female"
+    - "f3"
+    - "en-us"
+    - "english-us"
+    - "us"
+  fallback_voice_id: "english-us+f3"
+  piper_command: ".venv/bin/piper"
+  piper_model_path: "models/piper/en_US-lessac-medium.onnx"
+  piper_model_config_path: "models/piper/en_US-lessac-medium.onnx.json"
+
+vision:
+  camera_index: 0
+  frame_width: 1280
+  frame_height: 720
+  fps: 30
+  detection_interval_seconds: 0.2
+  min_color_area: 8500
+
+model:
+  llm_endpoint: "http://127.0.0.1:11434/api/generate"
+  llm_model_name: "llama3.2:3b"
+  llm_timeout_seconds: 15
+  llm_required: false
+  hailo_status_command: "hailortcli fw-control identify"
+  hailo_model_dir: "/usr/share/hailo-models"
+  hailo_preferred_models:
+    - "yolov8s_pose_h8.hef"
+    - "yolov8s_pose_h8l_pi.hef"
+    - "yolov8m_pose_h10.hef"
+    - "yolov8s_h8.hef"
+    - "yolov6n_h8.hef"
+
+match:
+  default_duration_seconds: 120
+  announce_countdown: true
+
+dashboard:
+  host: 0.0.0.0
+  port: 8080
+  refresh_seconds: 2
+
+services:
+  referee_service_name: boston-referee
+  dashboard_service_name: boston-dashboard
+  model_service_name: ollama
+  managed_services:
+    - boston-referee
+    - boston-dashboard
+    - ollama

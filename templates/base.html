@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boston Referee</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Boston</div>
+    <nav>
+      <a class="{% if page == 'dashboard' %}active{% endif %}" href="/">Dashboard</a>
+      <a class="{% if page == 'history' %}active{% endif %}" href="/history">Kumite History</a>
+      <a class="{% if page == 'settings' %}active{% endif %}" href="/settings">Settings</a>
+    </nav>
+  </header>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

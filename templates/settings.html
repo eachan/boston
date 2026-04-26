@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="grid two">
+  <article class="card">
+    <h2>Wi-Fi Networks</h2>
+    <form method="post" action="/settings/wifi" class="form">
+      <label>SSID <input name="ssid" required /></label>
+      <label>Password <input name="password" type="password" required /></label>
+      <button type="submit">Add Network</button>
+    </form>
+  </article>
+
+  <article class="card">
+    <h2>System Power</h2>
+    <div class="button-row">
+      <form method="post" action="/action/system">
+        <input type="hidden" name="action" value="reboot" />
+        <button type="submit" class="warn">Reboot Pi</button>
+      </form>
+      <form method="post" action="/action/system">
+        <input type="hidden" name="action" value="shutdown" />
+        <button type="submit" class="danger">Shut Down Pi</button>
+      </form>
+    </div>
+  </article>
+</section>
+
+<section class="card">
+  <h2>Managed Services</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for name in managed_services %}
+      <tr>
+        <td>{{ name }}</td>
+        <td><span class="badge {{ 'ok' if services[name] == 'active' else 'bad' }}">{{ services[name] }}</span></td>
+        <td>
+          <div class="button-row">
+            <form method="post" action="/action/service">
+              <input type="hidden" name="service" value="{{ name }}" />
+              <input type="hidden" name="action" value="start" />
+              <button type="submit">Start</button>
+            </form>
+            <form method="post" action="/action/service">
+              <input type="hidden" name="service" value="{{ name }}" />
+              <input type="hidden" name="action" value="stop" />
+              <button type="submit" class="warn">Stop</button>
+            </form>
+            <form method="post" action="/action/service">
+              <input type="hidden" name="service" value="{{ name }}" />
+              <input type="hidden" name="action" value="restart" />
+              <button type="submit" class="dark">Restart</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

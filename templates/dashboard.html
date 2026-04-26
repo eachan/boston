@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block content %}
+<meta http-equiv="refresh" content="{{ refresh_seconds }}" />
+
+<section class="grid two">
+  <article class="card">
+    <h2>Runtime Status</h2>
+    {% set runtime = status.runtime %}
+    {% set match = runtime.get('match', {}) if runtime else {} %}
+    <ul class="kv">
+      <li><span>State</span><strong>{{ match.get('state', 'unknown') }}</strong></li>
+      <li><span>Match ID</span><strong>{{ match.get('id', '-') }}</strong></li>
+      <li><span>White Score</span><strong>{{ match.get('white_score', 0) }}</strong></li>
+      <li><span>Blue Score</span><strong>{{ match.get('blue_score', 0) }}</strong></li>
+      <li><span>Duration</span><strong>{{ match.get('duration_seconds', 'untimed') }}</strong></li>
+      <li><span>Updated</span><strong>{{ runtime.get('timestamp', '-') if runtime else '-' }}</strong></li>
+    </ul>
+  </article>
+
+  <article class="card">
+    <h2>System Stats</h2>
+    {% set sys = status.system %}
+    <ul class="kv">
+      <li><span>CPU</span><strong>{{ sys.cpu_percent }}%</strong></li>
+      <li><span>Memory</span><strong>{{ sys.memory_percent }}% ({{ sys.memory_used_mb }}/{{ sys.memory_total_mb }} MB)</strong></li>
+      <li><span>Disk</span><strong>{{ sys.disk_percent }}% ({{ sys.disk_used_gb }}/{{ sys.disk_total_gb }} GB)</strong></li>
+      <li><span>Temperature</span><strong>{{ sys.temperature_c if sys.temperature_c is not none else '-' }} °C</strong></li>
+      <li><span>Host</span><strong>{{ sys.hostname }}</strong></li>
+    </ul>
+  </article>
+</section>
+
+<section class="grid three">
+  <article class="card">
+    <h3>Service Health</h3>
+    <ul class="list">
+      {% for name, state in status.services.items() %}
+      <li>{{ name }}: <span class="badge {{ 'ok' if state == 'active' else 'bad' }}">{{ state }}</span></li>
+      {% endfor %}
+    </ul>
+  </article>
+
+  <article class="card">
+    <h3>Hardware Feeds</h3>
+    {% set hw = status.hardware %}
+    <ul class="list">
+      <li>Hailo-8: <span class="badge {{ 'ok' if hw.hailo.ok else 'bad' }}">{{ hw.hailo.summary }}</span></li>
+      <li>Mic Feed: <span class="badge {{ 'ok' if hw.audio_input.ok else 'bad' }}">{{ hw.audio_input.summary }}</span></li>
+      <li>Sound Output: <span class="badge {{ 'ok' if hw.audio_output.ok else 'bad' }}">{{ hw.audio_output.summary }}</span></li>
+      {% set rs = status.runtime_services %}
+      <li>Camera Feed: <span class="badge {{ 'ok' if rs.get('camera', {}).get('running') else 'bad' }}">{{ 'running' if rs.get('camera', {}).get('running') else 'stopped' }}</span></li>
+      <li>Local Model: <span class="badge {{ 'ok' if rs.get('llm', {}).get('running') else 'bad' }}">{{ 'running' if rs.get('llm', {}).get('running') else 'stopped' }}</span></li>
+      <li>Hailo Vision Model: <span class="badge {{ 'ok' if rs.get('hailo_model') else 'bad' }}">{{ rs.get('hailo_model') or 'not selected' }}</span></li>
+    </ul>
+  </article>
+
+  <article class="card">
+    <h3>Visibility</h3>
+    {% set vis = status.runtime.get('visibility', {}) if status.runtime else {} %}
+    <ul class="kv">
+      <li><span>White Visible</span><strong>{{ vis.get('white_visible', False) }}</strong></li>
+      <li><span>Blue Visible</span><strong>{{ vis.get('blue_visible', False) }}</strong></li>
+      <li><span>White Area</span><strong>{{ vis.get('white_area', 0) }}</strong></li>
+      <li><span>Blue Area</span><strong>{{ vis.get('blue_area', 0) }}</strong></li>
+    </ul>
+  </article>
+</section>
+
+<section class="card">
+  <h2>Recent Activity</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Event</th>
+        <th>Actor</th>
+        <th>Points</th>
+        <th>Detail</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for event in events %}
+      <tr>
+        <td>{{ event.timestamp }}</td>
+        <td>{{ event.event_type }}</td>
+        <td>{{ event.actor or '-' }}</td>
+        <td>{{ event.points or '-' }}</td>
+        <td>{{ event.detail or '-' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

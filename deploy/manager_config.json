@@ -1,0 +1,22 @@
+{
+  "apps": [
+    {
+      "name": "Boston Referee",
+      "service": "boston-referee"
+    },
+    {
+      "name": "Boston Dashboard",
+      "service": "boston-dashboard"
+    },
+    {
+      "name": "Local Model (Ollama)",
+      "service": "ollama"
+    }
+  ],
+  "port": 22,
+  "username": "eachan",
+  "remote_dir": "/home/eachan/boston",
+  "host": "192.168.1.214",
+  "password": "w00dhill",
+  "local_project_dir": "C:/Users/eacha/Documents/Boston"
+}
